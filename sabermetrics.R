@@ -43,3 +43,13 @@ data_baseball %>%
   ggplot(aes(x=hr, y=rbi, col=league_id, size=ab)) + geom_point() + facet_wrap(~ibb) + labs(x='home runs', y='runs batted in', title='Home runs vs. runs batted in', subtitle='stratified by intentional walks') + theme(plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5))
   r_coef = cor(data_baseball$hr, data_baseball$rbi, use='complete.obs')
   print(r_coef)
+  
+# analyze player data of Scott Hatteberg, a Moneyball-era catcher for the Oakland A's
+# how did his OBP affect his runs scored? how about his OPS?
+player_data <- data_baseball %>%
+  select(player_id, year, bb, r, h, hbp, ab, sf, h, double, triple, hr) %>%
+  filter(player_id == 'hattesc01') %>%
+  group_by(year) %>%
+  summarise(at_bats = ab, hits = h, walks = bb, OBP = (h+bb+hbp)/(ab+bb+hbp+sf), SLG = (h + 2*double + 3*triple+4*hr)/(ab), OPS = OBP+SLG, runs_scored = r)
+  
+View(player_data)

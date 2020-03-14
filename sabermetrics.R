@@ -14,6 +14,9 @@ library(dplyr)
 # base on balls vs. hr?
 # hr vs. rbi?
 
+#typeof(data_baseball_hitting) # list
+#typeof(data_baseball_hitting$r) # double
+
 data_baseball_hitting %>%
   filter(year >= 2010) %>%
   ggplot(aes(x=bb, y=r, col=league_id, size=ibb)) + geom_point() + facet_wrap(~year) + labs(x='bases on balls', y='runs scored', title='Base on balls vs. runs scored', subtitle='stratified by intentional walks') + theme(plot.title = element_text(hjust=0.5))
@@ -48,6 +51,12 @@ data_baseball_hitting %>%
 data_baseball_hitting %>%
   filter(year >= 2010) %>%
   ggplot(aes(x=(h + bb + hbp)/(ab+bb+hbp+sf), y=r, col=league_id, size=hr)) + geom_point() + facet_wrap(~year) + labs(x='OBP', y='runs scored', title='OBP vs. runs scored', subtitle='shaped by home run count') + theme(plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5))
+
+# slugging precentage vs. runs scored
+data_baseball_hitting_filter <- data_baseball_hitting %>%
+  filter(year >= 2010)
+
+ggplot(data=data_baseball_hitting_filter, aes(x=(h + 2*double + 3*triple+4*hr)/ab, y=r, color=hr, size=bb)) + geom_point() + labs(x='SLG', y='runs scored', title='SLG vs. runs scored', subtitle='shaped by walk count') + theme(plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5)) + scale_x_continuous(limits=c(0, 1))
 
 # analyze player data of Scott Hatteberg, a Moneyball-era catcher for the Oakland A's
 # how did his OBP affect his runs scored? how about his OPS?

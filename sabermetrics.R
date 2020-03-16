@@ -51,3 +51,20 @@ hitting_data %>%
 
 # slugging precentage vs. runs scored
 ggplot(data=hitting_data, aes(x=(h + 2*double + 3*triple+4*hr)/ab, y=r, color=hr, size=bb)) + geom_point()+ facet_wrap(~year) + labs(x='SLG', y='runs scored', title='SLG vs. runs scored', subtitle='shaped by walk count and home runs') + theme(plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5)) + scale_x_continuous(limits=c(0, 1))
+
+# what sabermetric quantities lead to the most wins?
+# ignore the defensive contributions (or lack thereoWf)
+# bb (walks), so (strikeouts), baopp (batting average on pitches put in play)
+# era (runs/innings) and h (hits allowed) are useful for context
+
+pitching_data <- pitching_raw_data %>%
+  filter(year >= 2010)
+
+pitching_data %>%
+  ggplot(aes(x=bb, y=w, col=h, size=era)) + geom_point() + facet_wrap(~year) + labs(x='walks', y='wins', title='walks allowed vs. wins', subtitle = 'stratified by hits and ERA') + theme(plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5))
+  
+pitching_data %>%
+  ggplot(aes(x=so, y=w, col=h, size=era)) + geom_point() + facet_wrap(~year) + labs(x='strikeouts', y='wins', title='strikeouts vs. wins', subtitle = 'stratified by hits and ERA') + theme(plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5))
+
+pitching_data %>%
+  ggplot(aes(x=baopp, y=w, col=h, size=era)) + geom_point() + facet_wrap(~year) + labs(x='BAOPP', y='wins', title='BAOPP vs. wins', subtitle = 'stratified by hits and ERA') + theme(plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5))

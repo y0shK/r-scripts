@@ -60,11 +60,27 @@ ggplot(data=hitting_data, aes(x=(h + 2*double + 3*triple+4*hr)/ab, y=r, color=hr
 pitching_data <- pitching_raw_data %>%
   filter(year >= 2010)
 
+pitching_data_frame <- data.frame(pitching_data)  
+
 pitching_data %>%
   ggplot(aes(x=bb, y=w, col=h, size=era)) + geom_point() + facet_wrap(~year) + labs(x='walks', y='wins', title='walks allowed vs. wins', subtitle = 'stratified by hits and ERA') + theme(plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5))
-  
+  r_coef = cor(pitching_data$bb, pitching_data$w, use='complete.obs')
+  print(r_coef)
+
+t.test(data=pitching_data_frame, pitching_data$bb, pitching_data$w)
+
 pitching_data %>%
   ggplot(aes(x=so, y=w, col=h, size=era)) + geom_point() + facet_wrap(~year) + labs(x='strikeouts', y='wins', title='strikeouts vs. wins', subtitle = 'stratified by hits and ERA') + theme(plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5))
+  r_coef = cor(pitching_data$so, pitching_data$w, use='complete.obs')
+  print(r_coef)
+
+t.test(data = pitching_data_frame, pitching_data$so, pitching_data$w)
 
 pitching_data %>%
   ggplot(aes(x=baopp, y=w, col=h, size=era)) + geom_point() + facet_wrap(~year) + labs(x='BAOPP', y='wins', title='BAOPP vs. wins', subtitle = 'stratified by hits and ERA') + theme(plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5))
+
+exp_model <- lm(w ~ exp(baopp), data=pitching_data_frame)
+exp_new <- data.frame(baopp = pitching_data$baopp)
+predict(exp_model, newdata = exp_new, interval='confidence')
+
+t.test(data = pitching_data_frame, pitching_data$baopp, pitching_data$w)

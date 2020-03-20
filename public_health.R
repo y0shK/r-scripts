@@ -1,5 +1,5 @@
 # public health
-# additionally, some linReg and logReg stuff
+# additionally, some linear regression and logistic regression stuff
 
 getwd()
 setwd('/home/yash/public_health')
@@ -10,6 +10,7 @@ happiness_data <- read.csv('world-happiness-report-2019.csv')
 library(ggplot2)
 library(magrittr)
 
+# typeof(world_data_2015) # list
 world_data_2015_df <- data.frame(world_data_2015)
 happiness_data_df <- data.frame(happiness_data)
 
@@ -28,8 +29,6 @@ attach(world_data_2015)
 # use lm and ggplot to create residual models
 # broom + lm() with ggplot: https://stackoverflow.com/questions/36731027/how-can-i-plot-the-residuals-of-lm-with-ggplot
 
-library(broom)
-
 gdp_health <- lm(Health..Life.Expectancy. ~ Economy..GDP.per.Capita.)
 
 ggplot(gdp_health, aes(x=.fitted, y=.resid)) + geom_point() + labs(x='GDP per capita', y='Residuals', title='GDP per capita vs. Health, residuals')
@@ -42,16 +41,15 @@ scatterplot3d(x=Economy..GDP.per.Capita., y=Freedom, z=Health..Life.Expectancy.,
 
 # density plot with library e1071
 
+library(broom)
 library(e1071)
-
 plot(density(Economy..GDP.per.Capita.), main='Density plot: GDP per capita', ylab='Frequency')
 polygon(density(Economy..GDP.per.Capita.), col='blue')
 
-plot(density(Health..Life.Expectancy.), main='Density plot: Health and life expectancy', ylab='Frequency')
+plot(density(Health..Life.Expectancy.), main='Density plot: Life expectancy', ylab='Frequency')
 polygon(density(Health..Life.Expectancy.), col='green')
 
 # linear regression for world_data_2015
-# from http://r-statistics.co/Linear-Regression.html
 lin_reg <- lm(Health..Life.Expectancy. ~ Economy..GDP.per.Capita., data=world_data_2015)
 tidy(lin_reg) # use function tidy because it presents the data like a data frame
 
@@ -63,7 +61,6 @@ model_coefficients <- model_summary$coefficients
 beta.estimate <- model_coefficients['Economy..GDP.per.Capita.', 'Estimate'] # find the likelihood of type 2 error
 std.error <- model_coefficients['Economy..GDP.per.Capita.', 'Std. Error'] # standard error
 
-# function pt finds the p-value from the given data
 t_val <- beta.estimate / std.error # t = beta / sd
 p_val <- 2 * pt(-abs(t_val), df=nrow(world_data_2015)-ncol(world_data_2015))
 
@@ -71,3 +68,27 @@ p_val <- 2 * pt(-abs(t_val), df=nrow(world_data_2015)-ncol(world_data_2015))
 # https://stackoverflow.com/questions/15589601/print-string-and-variable-contents-on-the-same-line-in-r
 print(paste0('t-value: ', t_val))
 print(paste0('p-value: ', p_val))
+
+# test the linear regression model with the actual data
+# 80% train, 20% test
+
+set.seed(100) # random sampling
+
+# : operator creates first:last as vector c(first ... last)
+training_row_index <- sample(1:nrow(world_data_2015), 0.8*nrow(world_data_2015))
+training_data <- world_data_2015[training_row_index, ] # first 80%
+test_data <- world_data_2015[-training_row_index, ] # last 20%
+
+# develop the model and use it for predictions
+lin_reg_prediction_model <- lm(Health..Life.Expectancy. ~ Economy..GDP.per.Capita., data=world_data_2015)
+data_prediction <- predict(lin_reg_prediction_model, test_data)
+
+# review the accuracy of the model
+summary(lin_reg_prediction_model)
+
+# calculate the accuracy and error
+actual_vs_predicted <- data.frame(cbind(actuals=Health..Life.Expectancy., predicteds=data_prediction)) # cbind combines the actual and predicted objects
+cor_accuracy <- cor(actual_vs_predicted)
+head(actual_vs_predicted)
+
+# to-do: logistic regression

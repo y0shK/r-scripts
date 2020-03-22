@@ -91,17 +91,41 @@ actual_vs_predicted <- data.frame(cbind(actuals=Health..Life.Expectancy., predic
 cor_accuracy <- cor(actual_vs_predicted)
 head(actual_vs_predicted)
 
-# to-do: logistic regression
+# logistic regression for world_data_2015
 
-health_list_vector > 0.5
+# make the y-variable a factor (for classification) for glm to accept it as a parameter
+# https://stackoverflow.com/questions/47546658/logistic-regression-on-factor-error-in-evalfamilyinitialize-y-values-must
+health_factor = as.factor(world_data_2015$Health..Life.Expectancy.)
 
-bool_vector <- health_list_vector > 0.5
+# logistic regression with health/life expectancy as the dependent variable
+logistic_model <- glm(health_factor ~ world_data_2015$Economy..GDP.per.Capita., data = world_data_2015, family='binomial')
+
+# use predict() with an extra parameter, type='response' indicates the use of a specific glm model (i.e. logistic regression)
+# https://www.theanalysisfactor.com/r-tutorial-glm1/
+# https://stackoverflow.com/questions/23085096/type-parameter-of-the-predict-function/45647358
+data_prediction_log <- predict(logistic_model, test_data, type='response')
+
+summary(logistic_model)
+
+actual_vs_predicted_log <- data.frame(cbind(actuals=world_data_2015$Health..Life.Expectancy., predicteds=data_prediction_log))
+cor_accuracy_log <- cor(actual_vs_predicted_log)
+head(actual_vs_predicted_log)
+
+# create a list of the subset of world_data_2015 (e.g. world_data_2015$Health...)
+health_list <- c(Health..Life.Expectancy.)
+typeof(health_list) # list
+
+health_list_vector <- unlist(health_list) # list becomes vector
+health_list_vector > 0.5 # test for a specific condition
+
+bool_vector <- health_list_vector > 0.5 # assign the condition to a variable for a if/for loop
 
 success_vector <- c()
 failure_vector <- c()
 
 i <- 1
 
+# for every value in the boolean vector, if the condition is true (val > 0.5), assign its value to the list vector
 for (val in bool_vector) {
   if (val == TRUE) {
     success_vector <- c(success_vector, health_list_vector[[i]])
@@ -111,3 +135,6 @@ for (val in bool_vector) {
   }
   i <- i + 1
 }
+
+print(success_vector)
+print(failure_vector)

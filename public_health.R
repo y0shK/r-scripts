@@ -92,3 +92,22 @@ cor_accuracy <- cor(actual_vs_predicted)
 head(actual_vs_predicted)
 
 # to-do: logistic regression
+
+health_list_vector > 0.5
+
+bool_vector <- health_list_vector > 0.5
+
+success_vector <- c()
+failure_vector <- c()
+
+i <- 1
+
+for (val in bool_vector) {
+  if (val == TRUE) {
+    success_vector <- c(success_vector, health_list_vector[[i]])
+  }
+  else {
+    failure_vector <- c(failure_vector, health_list_vector[[i]])
+  }
+  i <- i + 1
+}

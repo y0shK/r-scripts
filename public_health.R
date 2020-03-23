@@ -138,3 +138,54 @@ for (val in bool_vector) {
 
 print(success_vector)
 print(failure_vector)
+
+# define success and failure integer lists with which()
+success <- which(world_data_2015$Health..Life.Expectancy. >= 0.5) # greater than 0.5 is "higher life expectancy"
+failure <- which(world_data_2015$Health..Life.Expectancy. < 0.5) # less than 0.5 is "lower life expectancy"
+
+print(success)
+print(failure)
+
+# lengths act as nrow for later sample() function
+success_length <- length(success)
+failure_length <- length(failure)
+
+print(success_length)
+print(failure_length)
+
+set.seed(100)
+
+# equal amounts of success and failure data
+# takes sample of earlier defined data (some subset from 1:len(success/failure) and converts it to integers)
+success_training_rows <- sample(1:success_length, as.integer(0.7*success_length))
+failure_training_rows <- sample(1:failure_length, as.integer(0.7*failure_length))
+
+# creates lists by indexing the earlier samples
+training_success_data <- success[success_training_rows]
+training_failure_data <- failure[failure_training_rows]
+
+# list to data.frame
+# https://stackoverflow.com/questions/4227223/convert-a-list-to-a-data-frame
+training_data_lists <- list(training_success_data, training_failure_data)
+training_data_logis2_df <- data.frame(matrix(unlist(training_data_lists), nrow=length(training_data_lists), byrow=TRUE))
+
+# create test data with the same procedure
+test_success_data <- success[-success_training_rows] # last bits of data to test
+test_failure_data <- success[-failure_training_rows]
+
+test_data_lists <- list(test_success_data, test_failure_data)
+test_data_logis2_df <- data.frame(matrix(unlist(test_data_lists), nrow=length(test_data_lists), byrow=TRUE))
+
+# try out data
+print(training_data_logis2_df)
+print(test_data_logis2_df)
+
+logistic_model_testdata <- glm(health_factor ~ world_data_2015$Economy..GDP.per.Capita., data = training_data_logis2_df, family='binomial')
+
+data_prediction_log_testdata <- predict(logistic_model_testdata, test_data_logis2_df, type='response')
+
+summary(logistic_model_testdata)
+
+actual_vs_predicted_log_testdata <- data.frame(cbind(actuals=world_data_2015$Health..Life.Expectancy., predicteds=data_prediction_log_testdata))
+cor_accuracy_log_testdata <- cor(actual_vs_predicted_log_testdata)
+head(actual_vs_predicted_log_testdata)

@@ -189,3 +189,22 @@ summary(logistic_model_testdata)
 actual_vs_predicted_log_testdata <- data.frame(cbind(actuals=world_data_2015$Health..Life.Expectancy., predicteds=data_prediction_log_testdata))
 cor_accuracy_log_testdata <- cor(actual_vs_predicted_log_testdata)
 head(actual_vs_predicted_log_testdata)
+
+# Poisson distribution
+# ppois(x, lambda=l) # lower tail - x or less
+# ppois(x, lambda=l, lower=FALSE) # upper tail - x+1 or more
+
+health_list_poisson <- list(Health..Life.Expectancy.)
+
+# create data frame from list, lapply() works on data.frame
+health_list_poisson_df <- data.frame(matrix(unlist(health_list_poisson)))
+
+# https://faculty.nps.edu/sebuttre/home/R/apply.html
+poisson_mean_list <- lapply(health_list_poisson_df, mean) # apply mean() to the entire data.frame, store that in list format
+print(poisson_mean_list) # length 1; 1 element
+
+poisson_mean <- unlist(poisson_mean_list) # lapply stores output in a list
+
+# the probability of each event occurring is given by the decimal from the poisson function
+ppois(0.5, lambda=poisson_mean, lower=FALSE) # greater than 0.5
+ppois(0.5, lambda=poisson_mean) # smaller than 0.5

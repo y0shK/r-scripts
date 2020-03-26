@@ -1,5 +1,6 @@
 # public health
 # additionally, some linear regression and logistic regression stuff
+# also uses Poisson distribution and Markov chains
 
 getwd()
 setwd('/home/yash/public_health')
@@ -208,3 +209,68 @@ poisson_mean <- unlist(poisson_mean_list) # lapply stores output in a list
 # the probability of each event occurring is given by the decimal from the poisson function
 ppois(0.5, lambda=poisson_mean, lower=FALSE) # greater than 0.5
 ppois(0.5, lambda=poisson_mean) # smaller than 0.5
+
+# use Markov chains to stratify arbitrary standards of living
+stratify_vector <- c('developing', 'industrializing', 'developed')
+
+# create a list of the data to transmute into a vector
+markov_health_list <- list(Health..Life.Expectancy.)
+markov_health_vector <- unlist(Health..Life.Expectancy., use.names=FALSE)
+typeof(markov_health_vector)
+
+sorted_markov_health_vector <- sort(markov_health_vector, decreasing = FALSE)
+
+# the markov vector is of length 158 - remove the last two elements with head(x, -2) so that it is divisible by 3
+sorted_markov_health_vector_mod3 <- head(sorted_markov_health_vector, -2)
+
+# create vectors for each category
+developing = c()
+industrializing = c()
+developed = c()
+
+# append the respective categories (from the sorted array) to their category vector
+for (i in 1:52) {
+  developing[i] <- sorted_markov_health_vector_mod3[i]
+}
+
+for (j in 53:104) {
+  industrializing[j] <- sorted_markov_health_vector_mod3[j]
+}
+
+for (k in 105:156) {
+  developed[k] <- sorted_markov_health_vector_mod3[k]
+}
+
+# remove NA values from industrializing and developed (because they start at indices != 1)
+# https://stackoverflow.com/questions/7706876/remove-na-values-from-a-vector
+industrializing <- industrializing[!is.na(industrializing)]
+developed <- developed[!is.na(developed)]
+
+# create a matrix which has elements from each stratified vector
+matrix_data <- c()
+matrix_count <- 1
+
+# i in range(52) because the index is 52 for each array, 156 total
+for (i in 1:52) {
+  if (matrix_count %% 3 == 1) {
+    matrix_data[i] <- developing[i]
+  }
+  else if (matrix_count %% 3 == 2) {
+    matrix_data[i] <- industrializing[i]
+  }
+  # or matrix_count mod 3 == 0, developed
+  else {
+    matrix_data[i] <- developed[i]
+  }
+  matrix_count <- matrix_count + 1
+}
+
+print(developing)
+print(industrializing)
+print(developed)
+
+print(matrix_data)
+
+# read the data into the matrix by row, with 3 rows (1 for each of the categories)
+transition_matrix <- matrix(matrix_data, nrow=3, byrow=TRUE, dimnames=list(stratify_vector))
+print(transition_matrix)

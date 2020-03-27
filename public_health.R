@@ -274,3 +274,16 @@ print(matrix_data)
 # read the data into the matrix by row, with 3 rows (1 for each of the categories)
 transition_matrix <- matrix(matrix_data, nrow=3, byrow=TRUE, dimnames=list(stratify_vector))
 print(transition_matrix)
+library(party)
+
+# independent variables affecting tree diagram
+econ_tree <- world_data_2015$Economy..GDP.per.Capita.
+health_exp_tree <- world_data_2015$Health..Life.Expectancy.
+freedom_tree <- world_data_2015$Freedom
+
+# dependent variable
+happiness_tree <- world_data_2015$Happiness.Score
+
+output.tree <- ctree(happiness_tree ~ econ_tree + health_exp_tree + freedom_tree, data=world_data_2015)
+plot(output.tree)
+

@@ -287,3 +287,13 @@ happiness_tree <- world_data_2015$Happiness.Score
 output.tree <- ctree(happiness_tree ~ econ_tree + health_exp_tree + freedom_tree, data=world_data_2015)
 plot(output.tree)
 
+# logical indexing
+matrix_data_index <- c()
+
+# create boolean array of 0.5
+for (i in 1:158) {
+  matrix_data_index[i] <- 0.5
+}
+
+# check when the data is greater than the threshold
+print(matrix_data > matrix_data_index)

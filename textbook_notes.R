@@ -89,3 +89,112 @@ print(charizard$dex_entries)
 # used in logistic regression - e.g. y ~ x in logit()
 
 formula1 <- formula_y ~ formula_x
+# Ch. 5 from the online textbook
+charizard_stats <- c(78, 84, 78, 109, 85, 100, 534)
+names(charizard_stats) <- c('HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed', 'Total')
+
+charizard_stats
+typeof(charizard_stats) # double
+class(charizard_stats) # numeric
+
+descriptive_charizard_stats <- charizard_stats[1:6]
+
+sum(charizard_stats)
+sum(descriptive_charizard_stats) / 6 # element 7 is the total
+mean(descriptive_charizard_stats) # ignore element 7
+
+median(descriptive_charizard_stats)
+
+# 'trimmed' mean -> discard most extreme values (largest & smallest) and then take mean
+# takes off a certain percentage of the values (to get rid of outliers)
+# should probably report actual and trimmed mean
+
+#sort(descriptive_charizard_stats, decreasing = FALSE)
+#n_val <- length(descriptive_charizard_stats)
+#trimmed_mean_vector <- descriptive_charizard_stats[2:(n_val-1)]
+#trimmed_mean_vector
+
+trimmed_mean <- mean(descriptive_charizard_stats, trim=.1)
+trimmed_mean
+
+library(lsr)
+modeOf(charizard_stats)
+
+mode_stats <- c(20, 22, 22, 13, 43, 65, 32, 34, 56, 742)
+sort(mode_stats, decreasing = FALSE)
+
+modeOf(mode_stats)
+maxFreq(charizard_stats)
+maxFreq(mode_stats)
+
+run_differential <- c(2, 4, 2, 3, 10, 3, 4, 2, 1, 2, 4, 5, 6, 1, 2, 3)
+sort(run_differential, decreasing = FALSE)
+
+max(run_differential)
+min(run_differential)
+range(run_differential)
+
+quantile(run_differential, probs=.5)
+quantile(run_differential, probs = c(.25, .75))
+IQR(run_differential)
+
+# mean absolute deviation
+# like a z-score, but without dividing by standard deviation or standard error (also no normality assumption)
+
+run_differential_avg <- mean(run_differential)
+absolute_deviation <- abs(run_differential - run_differential_avg)
+avg_absolute_deviation <- mean(absolute_deviation)
+print(avg_absolute_deviation)
+
+# variance - how much spread is in the data? (also additive, so var_x+var_y=var_z)
+# standard deviation - takes variance and converts it back to original units (root mean squared -> square root)
+var(run_differential)
+sd(run_differential)
+
+# median absolute deviation - how far is the data point from the "typical" data point?
+mad(run_differential, constant=1)
+mad(charizard_stats, constant=1)
+
+# why use median absolute deviation?
+# it is "robust" like the mean absolute deviation - not affected by extreme values
+# MAD * 1.4826 = standard deviation (iff bell curve, else don't use MAD)
+# when to use MAD? only during bell curve, otherwise stick to SD
+
+library(psych)
+skew(run_differential) # how normal is the data? high skew = low normality, slanted towards high or low values
+kurtosi(run_differential) # how 'pointy' is the data? 'just pointy enough' is a normal curve (kurtosis=0), -kurtosis = too flat, +kurtosis = too pointy
+
+# summary variables
+summary(descriptive_charizard_stats)
+
+squirtle_over_charizard <- c(TRUE, TRUE, FALSE, TRUE)
+
+count <- 1
+for (i in 1:20) {
+  if (count %% 3 == 0) {
+    squirtle_over_charizard[i] <- TRUE
+  }
+  else {
+    squirtle_over_charizard[i] <- FALSE
+  }
+  count <- count + 1
+}
+
+# random shuffle for vector
+# https://stackoverflow.com/questions/13765972/how-to-randomize-a-vector/13765997
+squirtle_sample <- sample(squirtle_over_charizard)
+
+summary(descriptive_charizard_stats)
+summary(squirtle_sample)
+
+# 1 = squirtle, 2 = ivysaur, ...
+
+# names() for c() vectors
+# levels() for factors
+pkmn_trainer_preferred_poke <- as.factor(c(1, 1, 1, 1, 2, 3, 3))
+
+levels(pkmn_trainer_preferred_poke) <- c('Squirtle', 'Ivysaur', 'Charizard')
+summary(pkmn_trainer_preferred_poke)
+
+describe(descriptive_charizard_stats)
+describe(squirtle_sample) # from psych package, only for numerics, not for factors

@@ -198,3 +198,57 @@ summary(pkmn_trainer_preferred_poke)
 
 describe(descriptive_charizard_stats)
 describe(squirtle_sample) # from psych package, only for numerics, not for factors
+
+pokemon_vector <- c('Charmander', 'Squirtle', 'Bulbasaur')
+atk_vector <- c(5, 4, 3)
+def_vector <- c(3, 4, 5)
+spd_vector <- c(4, 4, 4)
+value_vector <- c(9, 8, 7)
+#names(stats_vector) <- c(pokemon_vector[1], pokemon_vector[2], pokemon_vector[3])
+#stats_vector
+
+pokemon_data_frame <- data.frame(pokemon_vector, atk_vector, def_vector, spd_vector)
+pokemon_data_frame
+
+pokemon_data_frame$pokemon_vector
+
+# basic summary call; q1, median, q3, ...
+summary(pokemon_data_frame)
+
+# psych package - good for case studies, clinical trials, etc, ...
+# describeBy() from psych package - segregate data by specific groups
+describeBy(pokemon_data_frame, atk_vector)
+describeBy(pokemon_data_frame, def_vector)
+describeBy(pokemon_data_frame, spd_vector)
+
+# by() - same as describeBy(), but has a third parameter for a function call
+by(data=pokemon_data_frame, INDICES=atk_vector, FUN = summary) # most general = most powerful
+# by() gives built-in blocking (e.g. drug/placebo, treatment/homeopathy) w/ INDICES
+
+# aggregate() lets you combine variables' impact in a data.frame format
+aggregate(formula = value_vector ~ atk_vector + def_vector + spd_vector, data = pokemon_data_frame, FUN = mean)
+
+getwd()
+setwd('~/pokemon_analysis')
+
+pokemon_csv <- read.csv('pokemon.csv')
+
+pokemon_csv_df <- data.frame(pokemon_csv)
+pokemon_csv_df
+
+# tinker around with different summary functions()
+
+pokemon_csv_df$Generation <- as.factor(pokemon_csv_df$Generation) # let the data.frame know that generation is nominal, not numerical
+summary(pokemon_csv_df)
+by(pokemon_csv_df, INDICES=pokemon_csv_df$Generation, FUN=summary)
+describe(pokemon_csv_df)
+describeBy(pokemon_csv_df, pokemon_csv_df$Generation) # 'block' by generation
+
+z_score_atk_vector <- c()
+
+for (i in 1:length(pokemon_csv_df$Name)) {
+  z_score_atk_local <- (pokemon_csv_df$Attack[i] - mean(pokemon_csv_df$Attack)) / sd(pokemon_csv_df$Attack)
+  z_score_atk_vector[i] <- z_score_atk_local
+}
+
+z_score_atk_vector

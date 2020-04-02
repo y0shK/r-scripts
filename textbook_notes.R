@@ -273,3 +273,62 @@ correlate(pokemon_csv_df) # ignores all string factors
 pkmn_atk_vector <- c(300, 200, 100, 150, NA, 220)
 # mean(pkmn_atk_vector) -> NA
 mean(pkmn_atk_vector, na.rm=TRUE) # ignores NA and computes the rest
+# Chapter 6
+fibonacci <- c(1, 1, 2, 3, 5, 8, 13)
+
+# plot() has typical arguments (x/y) and 'graphical parameters' (which are generic arguments for all functions, like col, which are abstracted so arguments are specific to their function)
+# pch parameter changes what each point looks like (default is pch = 1, white circle)
+# can also specify plot size (default cex=1), line type (lty='solid' by default)
+
+# type = points only
+plot.default(fibonacci, 
+     main='fibonacci graph', 
+     sub='below x-axis', 
+     xlab='index number', 
+     ylab='fibonacci element', # # index is x-axis, vector[i] is y-axis
+     font.main=1, # plain text for title
+     cex.main=1, # normal size
+     font.axis = 2, # bold text
+     col.lab='springgreen4', pch=16) 
+
+# type = line only (connecting each point)
+plot.default(fibonacci, 
+     main='fibonacci graph', 
+     sub='below x-axis', 
+     xlab='index number', 
+     ylab='fibonacci element', # # index is x-axis, vector[i] is y-axis
+     font.main=1, # plain text for title
+     cex.main=1, # normal size
+     font.axis = 2, # bold text
+     col.lab='springgreen4', type='l', pch=16)
+
+# histogram-like vertical bars up until each point
+plot.default(fibonacci, 
+             main='fibonacci graph', 
+             sub='below x-axis', 
+             xlab='index number', 
+             ylab='fibonacci element', # # index is x-axis, vector[i] is y-axis
+             font.main=1, # plain text for title
+             cex.main=1, # normal size
+             font.axis = 2, # bold text
+             col.lab='springgreen4', type='h', pch=16)
+
+# both lines and points (without lines crossing over points)
+plot.default(fibonacci, 
+             main='fibonacci graph', 
+             sub='below x-axis', 
+             xlab='index number', 
+             ylab='fibonacci element', # # index is x-axis, vector[i] is y-axis
+             font.main=1, # plain text for title
+             cex.main=1, # normal size
+             font.axis = 2, # bold text
+             col.lab='springgreen4', type='b', pch=17)
+
+# alter different components of graph
+plot.default(fibonacci, 
+     type = 'b',
+     col = 'springgreen3',
+     pch=19, # change plotting character
+     cex=3, # 3x usual size
+     lty=2, # dashed lines
+     lwd = 4) # line width 4x usual

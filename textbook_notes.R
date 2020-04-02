@@ -252,3 +252,24 @@ for (i in 1:length(pokemon_csv_df$Name)) {
 }
 
 z_score_atk_vector
+pokemon_csv_df_numeric <- c(pokemon_csv_df$Attack, pokemon_csv_df$Defense, pokemon_csv_df$Defense)
+
+by(pokemon_csv_df, INDICES = pokemon_csv_df$Attack, FUN=summary)
+
+cor(pokemon_csv_df$Attack, pokemon_csv_df$HP)
+cor(pokemon_csv_df$Defense, pokemon_csv_df$HP)
+
+# cor() is for linear regression; how well does the line fit?
+# cor() with method=spearman converts the data so that it's ordinal
+  # spearman covers nonlinear inc or dec relationships (like ln(x))
+  # kendall (third method) looks at whether one data point does more of the behaviors than the other, factors that additional data in
+cor(pokemon_csv_df$Attack, pokemon_csv_df$HP, method='spearman')
+cor(pokemon_csv_df$Defense, pokemon_csv_df$HP, method = "spearman")
+
+# correlate() from the lsr package is similar to cor(), but it will ignore string factors
+# cor(pokemon_csv_df) # error
+correlate(pokemon_csv_df) # ignores all string factors
+
+pkmn_atk_vector <- c(300, 200, 100, 150, NA, 220)
+# mean(pkmn_atk_vector) -> NA
+mean(pkmn_atk_vector, na.rm=TRUE) # ignores NA and computes the rest

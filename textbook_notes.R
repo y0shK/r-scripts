@@ -332,3 +332,59 @@ plot.default(fibonacci,
      cex=3, # 3x usual size
      lty=2, # dashed lines
      lwd = 4) # line width 4x usual
+# histograms
+pkmn_atk_hist <- c(550, 200, 150, 150, 600, 500, 300, 100, 520, 300, 500, 400, 550, 340, 420, 590, 300, 400, 290, 290, 370, 380, 380, 250, 270) # pretend attack stats
+
+hist(pkmn_atk_hist) # default settings, R calibrates
+hist(pkmn_atk_hist, breaks = 5) # around 5, whatever looks pleasant/efficient
+# hist(pkmn_atk_hist, breaks = 0:length(pkmn_atk_hist)) # vector hard-codes 5 (human override of R's algorithm)
+
+# nice histogram
+hist(pkmn_atk_hist, 
+     xlab = 'attack stat',
+     density = 10, # 10 shading lines/inch
+     angle = 40, # angle of shading lines
+     border = 'gray20',
+     col = 'springgreen4',
+     labels = TRUE,
+     ylim = c(0, 10))
+
+# boxplots
+summary(pkmn_atk_hist)
+boxplot(pkmn_atk_hist)
+
+# nice boxplot
+boxplot(pkmn_atk_hist,
+        xlab = 'attack stat',
+        ylab = 'stat value',
+        border ='gray50',
+        frame.plot = TRUE,
+        staplewex = 0, # remove whiskers
+        whisklty = 1) # solid line
+
+# use which() to filter by outliers in boxplot
+which(pkmn_atk_hist > 500) # which index corresponds to an attack greater than 500?
+
+# create a boxplot with multiple individual boxes
+attach(pokemon_csv)
+boxplot(formula = HP ~ Generation, data = pokemon_csv)
+
+# nice boxplot with multiple individual plots
+boxplot(formula = HP ~ Generation,
+        data = pokemon_csv,
+        xlab = 'Generation',
+        ylab = 'HP',
+        frame.plot = FALSE, # don't draw a frame around the plots
+        staplewex = 0, # don't draw whiskers,
+        staplecol = 'white',
+        boxwex = 0.75, # narrow the box length
+        boxfill = 'springgreen4', # box color,
+        whisklty = 1, # solid lines, not dashed,
+        whiskcol = 'limegreen',
+        boxcol = 'black',
+        outcol = 'purple',
+        outpch = 16, # element denoting outlier,
+        outcex = 0.75, # shrink outlier size
+        medlty = 'blank', # remove lines for medians
+        medpch = 20, # draw solid dots for the medians
+        medlwd = 1.25) # make the median solid dots bigger

@@ -388,3 +388,85 @@ boxplot(formula = HP ~ Generation,
         medlty = 'blank', # remove lines for medians
         medpch = 20, # draw solid dots for the medians
         medlwd = 1.25) # make the median solid dots bigger
+
+# nice boxplot with multiple individual plots
+# create a function to pass individual stat relationships to
+plot_pokemon_boxplot <- function(stat1, stat2, stat1_name, stat2_name) {
+  independent = stat2_name
+  dependent = stat1_name
+  
+  boxplot(formula = stat1 ~ stat2,
+        data = pokemon_csv,
+        xlab = independent,
+        ylab = dependent,
+        frame.plot = FALSE, # don't draw a frame around the plots
+        staplewex = 0, # don't draw whiskers,
+        staplecol = 'white',
+        boxwex = 0.75, # narrow the box length
+        boxfill = 'springgreen4', # box color,
+        whisklty = 1, # solid lines, not dashed,
+        whiskcol = 'limegreen',
+        boxcol = 'black',
+        outcol = 'purple',
+        outpch = 16, # element denoting outlier,
+        outcex = 0.75, # shrink outlier size
+        medlty = 'blank', # remove lines for medians
+        medpch = 20, # draw solid dots for the medians
+        medlwd = 1.25) # make the median solid dots bigger
+}
+
+plot_pokemon_boxplot(HP, Generation, 'HP', 'Generation')
+plot_pokemon_boxplot(Attack, Generation, 'Attack', 'Generation')
+plot_pokemon_boxplot(Defense, Generation, 'Defense', 'Generation')
+plot_pokemon_boxplot(Sp..Atk, Generation, 'Sp. Atk', 'Generation')
+plot_pokemon_boxplot(Sp..Def, Generation, 'Sp. Def', 'Generation')
+plot_pokemon_boxplot(Speed, Generation, 'Speed', 'Generation')
+
+# scatter plots
+# plot points
+plot(x = HP,
+     y = Defense,
+     xlab = 'HP',
+     ylab = 'Defense',
+     pch = 16, # put xlim or ylim in if necessary
+     col = 'springgreen2',
+     frame.plot = FALSE) # no box
+     
+# create a linear model for HP and defense
+reg_model <- lm(Defense ~ HP, data = pokemon_csv)
+reg_model_resid <- resid(reg_model)
+summary(reg_model)
+
+# https://stats.idre.ucla.edu/r/faq/how-can-i-do-a-scatterplot-with-regression-line-or-any-other-lines/
+with(pokemon_csv, plot(x = HP,
+                       y = Defense,
+                       xlab = 'HP',
+                       ylab = 'Defense',
+                       main = 'HP vs. Defense',
+                       pch = 20, # put xlim or ylim in if necessary
+                       col = 'springgreen2',
+                       frame.plot = FALSE))
+abline(reg_model) # abline() creates a trendline with the given lm
+
+# plot residuals
+plot(HP, reg_model_resid, data = pokemon_csv,
+     ylab = 'Residuals', xlab = 'HP',
+     main = 'HP vs. Residuals (defense)')
+abline(0, 0) # horizontal line across the graph
+
+cor(x = pokemon_csv$HP, pokemon_csv$Defense)
+
+# pairs() compares different attributes of a data frame in a matrix-like format, with graphs in each element
+pairs(formula = ~ HP + Defense + Sp..Def, 
+      data = pokemon_csv)
+pairs(formula = ~ Attack + Sp..Atk + Speed,
+      data = pokemon_csv)
+
+# bar graphs
+defense_values <- tabulate(pokemon_csv$Defense) # tabulate creates a simple numeric vector
+defense_pokemon <- levels(pokemon_csv$Defense)
+
+# par() - change the space on a bar graph
+# default bar graph just plots values, need to feed in more data
+barplot(height = defense_values, names.arg = defense_pokemon,
+        las = 2, main='defense') # rotate the labels vertically

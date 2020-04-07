@@ -522,3 +522,42 @@ df_store_pkmn_speed_7 <- data.frame("fast_pokemon" = which(df_pkmn_speed_7 > 50)
 
 df_pkmn_speed_7
 df_store_pkmn_speed_7
+
+# cutting numeric variable data into categories
+pkmn_stats_7 <- c(200, 150, 200, 220, 450, 100, 210, 120, 430, 500)
+
+pkmn_stats_breaks_7 <- seq(from = 0, to = 600, by = 200)
+pkmn_stats_breaks_7
+
+pkmn_stats_labels_7 <- c("not viable", "viable", "extraordinary")
+
+# cut() takes numerical data and assigns it into categories
+# e.g. breaks <- seq(from = 0, to = 1, by = 1)
+  # labels <- c('benign', 'malignant')
+pkmn_cut_7 <- cut(pkmn_stats_7,
+                  breaks = pkmn_stats_breaks_7, # edges for the categories
+                  labels = pkmn_stats_labels_7)
+
+pkmn_cut_7
+
+# let R decide the breaks
+pkmn_autonomous_7 <- cut(pkmn_stats_7, breaks = 3)
+print(pkmn_autonomous_7)
+
+benign_data_7 <- c(0, 0, 0, 1, 1, 1, 0)
+benign_breaks_7 <- seq(from = -1, to = 1, by = 1)
+benign_labels_7 <- c('benign', 'malignant') # number of edges; -1 to 0 is 'benign' & 0 to 1 is 'malignant' - no need to start at -1
+
+benign_cut_7 <- cut(benign_data_7, breaks = benign_breaks_7, labels = benign_labels_7)
+
+benign_cut_7
+
+# useful mathematical functions?
+round(x = 4.3, digits = 1) # truncates to 4, can provide digit number
+# for sig figs, use signif(x = some value, digits = n)
+
+# integer division - %/%
+# modulus - %%
+# interestingly, negative modulus rounds up
+  # e.g. -42 mod 10 = 5, not 4, because remainder 2 necessitates a +1
+# logarithms - log10(), log2(), log() is ln(x), exp(x) = e^x

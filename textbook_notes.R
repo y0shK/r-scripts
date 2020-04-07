@@ -470,3 +470,55 @@ defense_pokemon <- levels(pokemon_csv$Defense)
 # default bar graph just plots values, need to feed in more data
 barplot(height = defense_values, names.arg = defense_pokemon,
         las = 2, main='defense') # rotate the labels vertically
+
+# Chapter 7
+pkmn_hp_vector_7 <- c(pokemon_csv$HP)
+#pkmn_def_vector_7 <- c(pokemon_csv$Defense)
+
+use_count <- c()
+counter <- 1
+
+for (i in 1:length(pkmn_hp_vector_7)) {
+  if (pkmn_hp_vector_7[i] > 50) {
+    use_count[counter] <- "true"
+  }
+  else {
+    use_count[counter] <- "false"
+  }
+  counter <- counter + 1
+}
+
+print(use_count)
+
+print(pkmn_hp_vector_7)
+table(pkmn_hp_vector_7) # frequency table
+
+# frequency table; x = HP amount, y = arbitrary true/false metric (e.g. usable in competitive?)
+# some random ordered pair, e.g. (70, true) -> 57 implies that there are 57 pokemon in the data who 1) have HP == 70 and 2) are usable
+
+use_from_hp_7 <- table(use_count, pkmn_hp_vector_7)
+use_from_hp_7
+
+# proportions rather than counts, prop = count / total
+prop_from_hp_7 <- prop.table(x = use_from_hp_7) # count / total
+prop_from_hp_row_7 <- prop.table(x = use_from_hp_7, margin = 1) # margin = 1 to say that 'total' is row by row; all elements in row sum to 1
+
+prop_from_hp_7
+
+prop_from_hp_row_7
+
+# create a table from a data frame
+pkmn_table_7 <- data.frame(use_count, pkmn_hp_vector_7)
+pkmn_table_7
+
+# operations to transform a variable
+df_pkmn_speed_7 <- data.frame(pokemon_csv$Speed)
+
+which(df_pkmn_speed_7 > 50)
+
+df_store_pkmn_speed_7 <- data.frame("fast_pokemon" = which(df_pkmn_speed_7 > 50))
+#df_pkmn_speed_7$fast_pokemon <- which(df_pkmn_speed_7 > 50)
+#df_pkmn_speed_7$better_than_average <- which(quantile(df_pkmn_speed_7) > 0.5)
+
+df_pkmn_speed_7
+df_store_pkmn_speed_7

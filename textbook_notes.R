@@ -561,3 +561,56 @@ round(x = 4.3, digits = 1) # truncates to 4, can provide digit number
 # interestingly, negative modulus rounds up
   # e.g. -42 mod 10 = 5, not 4, because remainder 2 necessitates a +1
 # logarithms - log10(), log2(), log() is ln(x), exp(x) = e^x
+
+# extract subset of a vector
+viable_speed_7 <- which(pokemon_csv$Speed > 50)
+print(viable_speed_7)
+# R has an %in% operator, like pythonic in
+
+pkmn_speed_vector_7 <- c(pokemon_csv$Speed) # call data frame element as a vector
+print(pkmn_speed_vector_7[2:3]) # call specific subset
+print(pkmn_speed_vector_7[-(1:500)]) # call all indices except 1:500
+
+# reddit documentation for Error in `[.data.frame`(x, r, vars, drop = drop) : undefined columns selected
+# https://www.reddit.com/r/RStudio/comments/85h7xh/subsetting_data_error_in_dataframex_r_vars_drop/
+
+# subset a vector using the subset() method
+# x = data frame, subset = df$element conditional, select = element (not df$element)
+df_subset_7 <- subset(pokemon_csv, subset = pokemon_csv$Speed > 50, select = Speed)
+df_subset_7
+
+# can also subset by pulling out ordered pairs
+pkmn_csv_as_df_7 <- data.frame(pokemon_csv)
+
+# in pokemon_csv, x1:y1 is column number (what Pokemon?) and x2:y2 is stats for that Pokemon (name, HP, type, etc.)
+df_subset_index_7 <- pkmn_csv_as_df_7[4:5, 3:4]
+print(df_subset_index_7)
+
+df_subset_by_name_7 <- pkmn_csv_as_df_7[c('Type.1', 'Type.2')] # subset by name rather than element number
+df_subset_by_name_7
+
+is_pokemon_dewott <- pokemon_csv$Name == 'Dewott'
+is_pokemon_dewott # prints out entire array of false, 1 true
+pokemon_csv[is_pokemon_dewott, c('X.', 'HP', 'Attack', 'Defense')] # pass in boolean to call specific elements just for Dewott
+
+# can only subset rows or columns using an empty comma
+pokemon_csv[, 1:2] # keep all rows, only first two columns
+pokemon_csv[1:2, ] # keep all columns, only first two rows
+pokemon_csv[,] # technically a valid command but doesn't subset anything
+
+# can use negative indices to delete rows
+pokemon_csv[1:3, -5] # rows 1-3, delete column 5, show the rest
+
+# R has curious dropping behavior for a 1xnumber data frame
+pokemon_csv[5, ] # a data frame for one row (row 5) and all columns
+pokemon_csv[, 5] # NOT a data frame, actually a vector of type/elements of column 5
+pokemon_csv[, 5, drop = FALSE]# optional drop parameter, type data frame
+
+# square brackets for columns
+pokemon_csv[1:2] # all rows, first two columns, R automatically assumes you want all rows
+pokemon_csv[5] # n rows with 1 column, in format data frame
+pokemon_csv[[5]] # n rows with 1 column, in format numeric/string vector (i.e. forcing R to drop the data frame to a vector)
+
+# access element n from a list - list[n]
+# access element n from 1 row of a data frame - data_frame_name[[n]]
+  # this tells R that the data frame should be interpreted AS a list (i.e. a numeric vector, etc.)

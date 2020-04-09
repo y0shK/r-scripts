@@ -614,3 +614,35 @@ pokemon_csv[[5]] # n rows with 1 column, in format numeric/string vector (i.e. f
 # access element n from a list - list[n]
 # access element n from 1 row of a data frame - data_frame_name[[n]]
   # this tells R that the data frame should be interpreted AS a list (i.e. a numeric vector, etc.)
+
+# handling data - sorting, flipping, merging data
+# sort numeric & string vectors
+
+attack_nums_7 <- c(200, 300, 330, 150, 320)
+sort(attack_nums_7) # can also set decreasing = TRUE
+
+text_sort_7 <- c('atk', 'def', 'spd', 'generation')
+text_sort_factor_7 <- as.factor(text_sort_7)
+
+sort(text_sort_7)
+
+print(text_sort_factor_7) # not in alpha order
+sort(text_sort_factor_7) # still not in alpha order, sorts by order of factor levels given
+
+# library lsr has sortFrame() function which can sort data frames
+# lsr also has rowCopy and colCopy functions, which take a vector and create a matrix n times (x = vector, times = n)
+
+# bind vectors together with data.frame, cbind(), and rbind()
+charizard_vector_7 <- c(6, 100, 70, 90) # pokedex number, atk, def, spd
+blastoise_vector_7 <- c(9, 85, 85, 90)
+
+kanto_df_7 <- data.frame(charizard_vector_7, blastoise_vector_7)
+kanto_df_7
+
+# use 'column bind' function to combine the two vectors into a column matrix
+kanto_cbind_7 <- cbind(charizard_vector_7, blastoise_vector_7)
+kanto_cbind_7
+
+# similar 'row bind' function, but for a horizontal rather than vertical matrix
+kanto_rbind_7 <- rbind(charizard_vector_7, blastoise_vector_7)
+kanto_rbind_7

@@ -646,3 +646,29 @@ kanto_cbind_7
 # similar 'row bind' function, but for a horizontal rather than vertical matrix
 kanto_rbind_7 <- rbind(charizard_vector_7, blastoise_vector_7)
 kanto_rbind_7
+
+# transpose a matrix from dim mxn to nxm
+kanto_rbind_transposed_7 <- t(kanto_rbind_7)
+kanto_rbind_transposed_7 # in form matrix
+
+kanto_rbind_transposed_as_df_7 <- as.data.frame(kanto_rbind_transposed_7) # data frame
+kanto_rbind_transposed_as_df_7
+
+# reshape data
+# wide data frame - columns are characteristics, rows are different subjects
+# long data frame - columns are different subjects, rows are characteristics
+
+# lsr longToWide and wideToLong will not work without a specific variable name scheme
+
+# reshape methods?
+# transpose t()
+# melt()
+
+new_charizard_data_7 <- c('Charizard', 90, 70, 80)
+new_blastoise_data_7 <- c('Blastoise', 80, 80, 80)
+names(new_charizard_data_7) <- c('Name', 'Attack', 'Defense', 'Speed')
+names(new_blastoise_data_7) <- c('Name', 'Attack', 'Defense', 'Speed')
+
+charizard_blastoise_df_7 <- data.frame(new_charizard_data_7, new_blastoise_data_7)
+
+print(charizard_blastoise_df_7)

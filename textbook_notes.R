@@ -664,11 +664,39 @@ kanto_rbind_transposed_as_df_7
 # transpose t()
 # melt()
 
-new_charizard_data_7 <- c('Charizard', 90, 70, 80)
-new_blastoise_data_7 <- c('Blastoise', 80, 80, 80)
-names(new_charizard_data_7) <- c('Name', 'Attack', 'Defense', 'Speed')
-names(new_blastoise_data_7) <- c('Name', 'Attack', 'Defense', 'Speed')
+# define different data types, with id and variables to reshape
+new_charizard_data_7 <- c(6, 90, 70, 80)
+new_blastoise_data_7 <- c(9, 80, 80, 80)
+names(new_charizard_data_7) <- c('Dex_Number', 'Attack', 'Defense', 'Speed_Stat')
+
+# if a string is added into the vector of integers, the whole data.frame is considered a factor
 
 charizard_blastoise_df_7 <- data.frame(new_charizard_data_7, new_blastoise_data_7)
-
 print(charizard_blastoise_df_7)
+
+library(reshape)
+
+# coerce data frame to matrix
+charizard_blastoise_matrix_7 <- data.matrix(charizard_blastoise_df_7)
+charizard_blastoise_matrix_7
+
+# take transpose of matrix
+charizard_blastoise_matrix_flipped_7 <- t(charizard_blastoise_matrix_7)
+charizard_blastoise_matrix_flipped_7
+
+# convert matrix back to data frame to use in melt()
+charizard_blastoise_df_flipped_7 <- as.data.frame(charizard_blastoise_matrix_flipped_7)
+charizard_blastoise_df_flipped_7
+
+# library reshape uses melt() and cast() to reshape the data from a data.frame to a table-like format
+  # much more general in how reshape occurs
+
+# molten data contains the data frame with ID = c(classification), measured = c(variables)
+melt_data_7 <- melt(charizard_blastoise_df_flipped_7, id = c('Dex_Number'), measured = c('Attack', 'Defense', 'Speed_Stat'))
+print(melt_data_7)
+
+# casted data reshapes the data, classification ~ variable
+cast_data_7 <- cast(melt_data_7, Dex_Number ~ variable)
+cast_data_7
+
+# Stack Overflow: https://stackoverflow.com/questions/27125342/r-reshape-cast-error

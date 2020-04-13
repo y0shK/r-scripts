@@ -86,14 +86,14 @@ head(cast_world_data_id)
 # acast() experiment
 
 # create statistics for each Pokemon
-samurott_data <- c(100, 100, 100, 503, 1)
-serperior_data <- c(90, 100, 110, 497, 2)
-emboar_data <- c(110, 100, 90, 500, 3)
+samurott_data <- c(100, 100, 100, 503)
+serperior_data <- c(90, 100, 110, 497)
+emboar_data <- c(110, 100, 90, 500)
 
 # input names for each vector to classify each stat per Pokemon
-names(samurott_data) <- c('Sp..Atk', 'Sp..Def', 'Spd', 'Dex.Number', 'Arbitrary.Placeholder')
-names(serperior_data) <- c('Sp..Atk', 'Sp..Def', 'Spd', 'Dex.Number', 'Arbitrary.Placeholder')
-names(emboar_data) <- c('Sp..Atk', 'Sp..Def', 'Spd', 'Dex.Number', 'Arbitrary.Placeholder')
+names(samurott_data) <- c('Sp..Atk', 'Sp..Def', 'Spd', 'Dex.Number')
+names(serperior_data) <- c('Sp..Atk', 'Sp..Def', 'Spd', 'Dex.Number')
+names(emboar_data) <- c('Sp..Atk', 'Sp..Def', 'Spd', 'Dex.Number')
 
 # to convert a usable data.frame of information to a meltable and castable form,
   # convert it to matrix, flip the dimensions with the tranpose, then convert back to data.frame
@@ -118,6 +118,7 @@ unova_df
 
 # usable data.frame
 prepared_unova_df <- prepare_df_for_melt_cast(unova_df) # df to use with melting and casting
+prepared_unova_df # should be the transpose of the previous data.frame
 
 # print out data frame
 unova_count <- 1
@@ -129,11 +130,11 @@ for (i in 1:3) {
 # melt a vector or list - melt default function, melt()
 # https://rdrr.io/cran/reshape2/man/melt.default.html
 
-melt_unova_data <- melt(prepared_unova_df, id.vars = c('Dex.Number', 'Arbitrary.Placeholder'), factorsAsStrings = TRUE)
+melt_unova_data <- melt(prepared_unova_df, id.vars = c('Dex.Number'), measured.vars = c('Sp..Atk', 'Sp..Def', 'Spd'), factorsAsStrings = TRUE)
 melt_unova_data
 
-# use a different set of parameters in acast
+# use a different set of parameters in acast rather than the formula used by dcast
 # https://stackoverflow.com/questions/3768417/how-to-use-acast-reshape2-within-a-function-in-r
 
-cast_unova_data <- acast(prepared_unova_df, list(names(prepared_unova_df)[1]))
+cast_unova_data <- acast(prepared_unova_df, list(names(prepared_unova_df)[1], names(prepared_unova_df)[2], names(prepared_unova_df)[3]))
 cast_unova_data

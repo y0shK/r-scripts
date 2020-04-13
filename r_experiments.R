@@ -84,20 +84,56 @@ cast_world_data_id <- dcast(melt_world_data_id, Health..Life.Expectancy. + Count
 head(cast_world_data_id)
 
 # acast() experiment
-samurott_data <- c('Samurott', 100, 100, 100)
-serperior_data <- c('Serperior', 90, 100, 110)
-emboar_data <- c('Emboar', 110, 100, 90)
-names(samurott_data) <- c('Name', 'Sp..Atk', 'Sp. Def', 'Speed')
 
-unova_vector <- c(samurott_data, serperior_data, emboar_data)
-unova_vector
+# create statistics for each Pokemon
+samurott_data <- c(100, 100, 100, 503, 1)
+serperior_data <- c(90, 100, 110, 497, 2)
+emboar_data <- c(110, 100, 90, 500, 3)
 
-# melt a vector - melt default function, melt()
+# input names for each vector to classify each stat per Pokemon
+names(samurott_data) <- c('Sp..Atk', 'Sp..Def', 'Spd', 'Dex.Number', 'Arbitrary.Placeholder')
+names(serperior_data) <- c('Sp..Atk', 'Sp..Def', 'Spd', 'Dex.Number', 'Arbitrary.Placeholder')
+names(emboar_data) <- c('Sp..Atk', 'Sp..Def', 'Spd', 'Dex.Number', 'Arbitrary.Placeholder')
+
+# to convert a usable data.frame of information to a meltable and castable form,
+  # convert it to matrix, flip the dimensions with the tranpose, then convert back to data.frame
+  # this ensures that each column is a piece of information (i.e. stats) rather than a group (i.e. Pokemon)
+
+# construct function to convert data.frame to a usable form for melting/casting
+prepare_df_for_melt_cast <- function(df_given) {
+  # coerce data frame to matrix
+  df_to_matrix <- data.matrix(df_given)
+  
+  # take transpose of matrix
+  matrix_transpose <- t(df_to_matrix)
+  
+  # convert matrix back to data frame to use in melt()
+  matrix_to_flipped_df_of_given <- as.data.frame(matrix_transpose)
+  return(matrix_to_flipped_df_of_given)
+}
+
+# unusable data.frame
+unova_df <- data.frame(samurott_data, serperior_data, emboar_data)
+unova_df
+
+# usable data.frame
+prepared_unova_df <- prepare_df_for_melt_cast(unova_df) # df to use with melting and casting
+
+# print out data frame
+unova_count <- 1
+for (i in 1:3) {
+  print(unova_df[[unova_count]]) # force R to consider unova data frame a numeric vector and print out its nth array
+  unova_count <- unova_count + 1
+}
+
+# melt a vector or list - melt default function, melt()
 # https://rdrr.io/cran/reshape2/man/melt.default.html
 
-# melt_aes takes the wide unova_vector data and transforms it to long data
-melt_unova_data_aes <- melt(unova_vector, id.vars = c('Name'), 
-                            measure.vars = c('Sp..Atk', 'Sp. Def', 'Speed'),
-                            variable.name = 'Stat type')
+melt_unova_data <- melt(prepared_unova_df, id.vars = c('Dex.Number', 'Arbitrary.Placeholder'), factorsAsStrings = TRUE)
+melt_unova_data
 
-melt_unova_data_aes
+# use a different set of parameters in acast
+# https://stackoverflow.com/questions/3768417/how-to-use-acast-reshape2-within-a-function-in-r
+
+cast_unova_data <- acast(prepared_unova_df, list(names(prepared_unova_df)[1]))
+cast_unova_data

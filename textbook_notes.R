@@ -731,3 +731,51 @@ matrix_example_7[2, 1] # Squirtle's defense = 50
 # data type clarification
 c(23, 23, 23) # vector, which contains data points (ints, strings) next to each other
 list(c(23, 23, 23), 17) # list, which contains elements that can be vectors
+
+# Ch. 8 notes
+j8 <- 0
+while (j8 < 2) {
+  print('still in loop')
+  j8 <- j8 + 2
+}
+
+# for (i in 1:3) performs action thrice
+words <- c('gotta', 'catch', 'them', 'all')
+for (word in words) {
+  word.length <- nchar(word)
+  capital_word <- toupper(word)
+  iter_message <- paste(capital_word, 'has', word.length, 'letters.')
+  print(iter_message)
+}
+
+# useful documentation for grepl - returns true if character is in a string
+# https://stackoverflow.com/questions/10128617/test-if-characters-are-in-a-string
+
+for (word in words) {
+  if (grepl('t', word, fixed=TRUE) == TRUE) { # grepl works like pythonic in
+    print('the character t is in the word')
+  }
+  else {
+    print('t is not in the word')
+  }
+}
+
+count_char_occurrences_in_string_of_words <- function(char, string) {
+  char.count <- 0
+  for (i in 1:7) {
+    if (grepl(char, string[[1]][i], fixed=TRUE) == TRUE) {
+      char.count <- char.count + 1
+    }
+  }
+  print(paste('The character', char, 'shows up', char.count, 'times.'))
+}
+
+test_string <- 'Squirtle saw a silver Sylveon in Sinnoh!'
+test_string_split <- strsplit(test_string, ' ')
+print(test_string_split)
+# output of test_string_split is [[1]][1..7], i.e. the vector has 1 element that can be further subsetted into different strings 1-7
+
+test_string_vector <- c(test_string_split)
+
+count_char_occurrences_in_string_of_words('s', test_string_vector) # 2
+count_char_occurrences_in_string_of_words('S', test_string_vector) # 3

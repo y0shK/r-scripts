@@ -700,3 +700,34 @@ cast_data_7 <- cast(melt_data_7, Dex_Number ~ variable)
 cast_data_7
 
 # Stack Overflow: https://stackoverflow.com/questions/27125342/r-reshape-cast-error
+
+# coerce data from one class to another
+coerce_data_7 <- "100"
+print(as.numeric(coerce_data_7)) # 100 as a numeric class
+# also have as.character, as.logical, as.data.frame
+
+# matrix notes
+squirtle_7 <- c(30, 50, 40) # atk, def, spd
+charmander_7 <- c(50, 30, 40)
+matrix_example_7 <- rbind(squirtle_7, charmander_7)
+
+rownames(matrix_example_7) <- c('Squirtle', 'Charmander')
+colnames(matrix_example_7) <- c('Atk', 'Def', 'Spd') # assign column names
+
+print(matrix_example_7)
+
+# melt and cast with matrix data
+matrix_ex_as_df <- as.data.frame(matrix_example_7) # coerce into class data.frame
+
+melt_matrix_ex <- melt(matrix_ex_as_df, id.vars = c('Spd'), measured.vars = c('Atk', 'Def'), factorsAsStrings = TRUE)
+melt_matrix_ex
+
+cast_matrix_ex <- cast(melt_matrix_ex, Spd ~ variable, fun.aggregate = mean)
+cast_matrix_ex # gives Spd, Atk, Def all 40
+
+# subset matrix
+matrix_example_7[2, 1] # Squirtle's defense = 50
+
+# data type clarification
+c(23, 23, 23) # vector, which contains data points (ints, strings) next to each other
+list(c(23, 23, 23), 17) # list, which contains elements that can be vectors

@@ -138,3 +138,50 @@ melt_unova_data
 
 cast_unova_data <- acast(prepared_unova_df, list(names(prepared_unova_df)[1], names(prepared_unova_df)[2], names(prepared_unova_df)[3]))
 cast_unova_data
+
+# sapply - provides a function to iterate along the elements of a vector
+sapply_vector_8 <- c('the', 'plans', 'of', 'mice', 'and', 'men')
+sapply(X = sapply_vector_8, FUN = nchar) # iterate through sapply_vector and print number of characters in each element
+
+# tapply - same as sapply, but has an 'index' argument which specifies a grouping ordinal variable
+# example data of patients, with certain diagnosis and variables
+diagnosis_vector_8 <- c('malignant', 'malignant', 'benign', 'malignant', 'benign')
+radius_vector_8 <- c(23, 32, 5, 54, 12)
+smoothness_vector_8 <- c(30, 30, 13, 50, 2)
+
+sapply(X = radius_vector_8, FUN = mean)
+
+# iterate through the radius data and find the means of each 'group' (benign or malignant) according to the index vector
+tapply(X = radius_vector_8, INDEX = diagnosis_vector_8, FUN = mean)
+tapply(X = smoothness_vector_8, INDEX = diagnosis_vector_8, FUN = mean) # same process with smoothness
+
+# by() is the same as tapply, but it formats output differently
+
+# lapply - apply operations on a list rather than a vector
+diagnosis_list_8 <- c('malignant', 'benign', 'benign', 'benign', 'malignant', 'benign')
+diagnosis_list_sorted_8 <- lapply(diagnosis_list_8, sort)
+diagnosis_list_sorted_8
+
+# convert list to vector for further vector operations - unlist()
+diagnosis_vector_unlisted_8 <- unlist(diagnosis_list_sorted_8)
+diagnosis_vector_unlisted_8
+
+# use lapply (for lists) & sapply (for vectors) to slice data through a data.frame
+data_set_lapply_sapply <- c(200, 300, 500, 120, 320, 130, 540) # vector
+data_set_df <- data.frame(data_set_lapply_sapply) # data.frame
+
+# sapply source: https://www.guru99.com/r-apply-sapply-tapply.html
+
+report_below_average <- function(x) {
+  average <- mean(x)
+  print(average)
+  
+  return(x[x < average]) # iterate through data.frame, if the particular index is less than the index then return
+}
+
+data_slice_s <- sapply(data_set_df, report_below_average) # average, same for sapply as lapply
+data_slice_l <- lapply(data_set_df, report_below_average)
+
+data_slice_s # in format of data.frame
+data_slice_l # in format of vector
+

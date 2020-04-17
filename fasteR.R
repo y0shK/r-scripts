@@ -82,3 +82,20 @@ determine_age_blond_hair_subset <- mean(blond_hair$Age)
 
 determine_age_black_hair_subset
 determine_age_blond_hair_subset
+
+# use tapply to easily compare means
+
+# blocking by hair color, compute the mean of each group of ages
+tapply(example_data_df$Age, example_data_df$`Hair color`, mean) # result is a vector, can be saved and manipulated
+
+# further tapply example
+diagnoses <- c('M', 'B', 'B', 'B', 'M', 'B', 'M', 'B', 'M', 'B')
+tumor_lengths <- c(23, 43, 12, 52, 14, 65, 23, 72, 12, 72)
+tapply(tumor_lengths, diagnoses, mean) # block by diagnosis, find mean of tumor lengths - useful medical data
+
+tapply(tumor_lengths, diagnoses, summary) # good for in-depth, numerical analysis of each kind of tumor
+tapply(tumor_lengths, diagnoses, length) # good to see the overall breakdown of tumors by kind
+
+row.names(example_data_df) <- c('Alice', 'Bob', 'Charlie', 'David', 'Eagle', 'Frankenstein', 'Goat', 'Helicopter', 'Igloo')
+row.names(example_data_df)[8] <- 'Hello World' # replace concatenated value in vector with this custom string
+example_data_df

@@ -99,3 +99,50 @@ tapply(tumor_lengths, diagnoses, length) # good to see the overall breakdown of 
 row.names(example_data_df) <- c('Alice', 'Bob', 'Charlie', 'David', 'Eagle', 'Frankenstein', 'Goat', 'Helicopter', 'Igloo')
 row.names(example_data_df)[8] <- 'Hello World' # replace concatenated value in vector with this custom string
 example_data_df
+
+# data cleaning
+getwd()
+setwd('~/Downloads')
+
+pima_csv <- read.csv('Pima.csv', header=TRUE)
+pima_csv
+
+head(pima_csv) # default - 10 values
+table(pima_csv$glucose) # table() gives a count of individuals with the given amount of the variable
+  # in this case, table() gives a count of women based on their glucose levels
+  # this table has some unreasonable values - glucose = 0 should not be possible
+
+# clean the data to remove glucose = 0, not physiologically possible
+reasonable_glucose_pima_csv <- pima_csv[pima_csv$glucose > 0, ] # rows = all glucose values > 0, columns = all
+
+head(reasonable_glucose_pima_csv)
+table(reasonable_glucose_pima_csv$glucose)
+
+# check to see the impact of cleaning up the data
+mean(pima_csv$glucose)
+mean(reasonable_glucose_pima_csv$glucose)
+# not much difference, but still good practice
+
+original_triceps <- mean(pima_csv$triceps)
+original_insulin <- mean(pima_csv$insulin)
+
+# use NA instead of simple removal
+recode_to_NA_glucose <- pima_csv$glucose == 0 # vector of TRUE and FALSE
+pima_csv$glucose[recode_to_NA_glucose] <- NA # previous boolean vector is here used to set the zero elements to NA
+
+sum(is.na(pima_csv$glucose)) # counts number of NA, output = 5
+mean(pima_csv$glucose, na.rm = TRUE) # na.rm is FALSE by default
+
+# determine other unreasonable values to clean
+
+clean_data <- function(df_column_supplied, original) {
+  index_for_NA <- df_column_supplied == 0
+  df_column_supplied[index_for_NA] <- NA
+  
+  # create a vector that differentiates between original calculation and calculation after 0 -> NA and removed
+  mean_vector <- c(mean(original, na.rm = TRUE), mean(df_column_supplied, na.rm = TRUE))
+  return(mean_vector)
+}
+
+clean_data(pima_csv$triceps, original_triceps)
+clean_data(pima_csv$insulin, original_insulin)

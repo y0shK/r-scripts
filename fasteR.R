@@ -146,3 +146,27 @@ clean_data <- function(df_column_supplied, original) {
 
 clean_data(pima_csv$triceps, original_triceps)
 clean_data(pima_csv$insulin, original_insulin)
+
+# R lists
+print(which(pima_csv$glucose == 88)) # find the specific indices which correspond to a glucose level of 88 -> 9 total instances
+print(pima_csv$glucose == 157) # create a boolean vector with TRUE wherever the glucose index is 157 and FALSE elsewhere
+
+# can create boolean vectors with df$category == some value, for all values
+  # alternative is to use split(df$category_examined, df$category_blocked)
+  # where category_examined is the numeric vector being printed and category_blocked is the value checked against the == operator
+
+block_by_glucose_7 <- pima_csv$glucose
+examine_insulin_7 <- pima_csv$insulin
+
+split_function_7 <- split(examine_insulin_7, block_by_glucose_7)
+split_function_7
+
+# split_function_7 is an object 'list' which specific, accessible vectors that possess all the frequency indices
+  # access the 1st vector with split_function_7$vector_value
+  # access the 1st index with split_function_7[[1]]
+
+head(split_function_7$`56`) # access specific vector corresponding to frequency 56
+head(split_function_7[[1]]) # access first index, which will display the first vector
+
+# access specific index from specific vector
+split_function_7[[35]][1] # find the 35th category (vector) and the 1st element of that category vector

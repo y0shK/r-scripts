@@ -170,3 +170,33 @@ head(split_function_7[[1]]) # access first index, which will display the first v
 
 # access specific index from specific vector
 split_function_7[[35]][1] # find the 35th category (vector) and the 1st element of that category vector
+
+# Ch 9 - use different graphing techniques to effectively display data
+plot(pima_csv$glucose, xlab='glucose amount', ylab='frequency', main = 'glucose amount vs. frequency', col = 'springgreen4', pch = 16)
+hist(pima_csv$glucose, xlab='Glucose amount', main = 'Glucose histogram', col = c('red', 'blue', 'springgreen2', 'gray', 'orange', 'springgreen4', 'magenta', 'cyan')) # color vector needs to match number of breaks
+  # use different colors for visualization: https://stackoverflow.com/questions/38810453/how-to-plot-a-histogram-with-different-colors-in-r
+
+getwd()
+setwd('/home/yash/public_health')
+
+world_data_2015 <- read.csv('2015.csv')
+happiness_data <- read.csv('world-happiness-report-2019.csv')
+
+# cut() function - divides range of x into intervals and sorts values depending on which interval they fall into
+  # leftmost interval = 1, ...
+  # https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/cut
+
+# use colorRampPalette to create a transition depending on values' percentile (e.g. 25th is different from 75th)
+  # use that color transition to visually segregate different groups of values
+  # https://stackoverflow.com/questions/9946630/colour-points-in-a-plot-differently-depending-on-a-vector-of-values
+
+palette_gdp <- colorRampPalette(c('magenta', 'cyan')) # two 'endpoints' of color
+gdp <- world_data_2015$Economy..GDP.per.Capita.
+happiness_score <- world_data_2015$Happiness.Score
+
+# create 5 intervals and then use cut() to assign all ordered pairs in the data to an interval
+  # then assign them their respective colorRampPalette color
+  # each data point has its xLoc, yLoc, and color -> informative and easy-to-peruse graph
+happiness_score_color <- palette_gdp(5)[as.numeric(cut(happiness_score, breaks=5))]
+
+plot(gdp, happiness_score, pch=16, col=happiness_score_color, xlab='GDP', ylab='Happiness rating', main='GDP vs. happiness', font.main=1, cex.main=1) # unbolded and same-size-as-labels title

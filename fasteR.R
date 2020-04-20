@@ -200,3 +200,28 @@ happiness_score <- world_data_2015$Happiness.Score
 happiness_score_color <- palette_gdp(5)[as.numeric(cut(happiness_score, breaks=5))]
 
 plot(gdp, happiness_score, pch=16, col=happiness_score_color, xlab='GDP', ylab='Happiness rating', main='GDP vs. happiness', font.main=1, cex.main=1) # unbolded and same-size-as-labels title
+
+# chapter 9 - base graphing functions in R
+getwd()
+setwd('~/pokemon_analysis')
+
+pokemon_csv <- read.csv('pokemon.csv')
+
+pkmn_atk <- pokemon_csv$Attack
+pkmn_spd <- pokemon_csv$Speed
+pkmn_sp_atk <- pokemon_csv$Sp..Atk
+
+# 4 arbitrary intervals - slow, average, faster, 'highest tier' -> add factors for color
+# create a range of hexadecimal colors and then use cut() to assign them to each data point (Pokemon)
+palette_by_speed <- colorRampPalette(c('magenta', 'cyan')) 
+
+# assign each Pokemon based on speed to an interval
+intervals_by_speed <- palette_by_speed(4)[as.numeric(cut(pkmn_spd, breaks=4))] # 
+
+# use colorRampPalette to return a vector of colors that is used in plot()
+  #https://bookdown.org/rdpeng/exdata/plotting-and-color-in-r.html
+return_hexadecimals <- colorRampPalette(c('red', 'blue'))
+color_ramp_palette_col <- c(return_hexadecimals(4))
+
+plot(pkmn_atk, pkmn_sp_atk, col=color_ramp_palette_col, cex.main=1, xlab='Attack', ylab='Sp. Attack', main = 'Offensive potential in Pokemon', font.main=1, pch=16)
+legend('topleft', legend=c(x='slow', 'average', 'fast', 'highest tier'), col=color_ramp_palette_col, cex=0.75, pch=16) # have to specify pch argument, otherwise dots will not show up

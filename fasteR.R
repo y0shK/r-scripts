@@ -102,7 +102,7 @@ example_data_df
 
 # data cleaning
 getwd()
-setwd('~/Downloads')
+setwd('~/r-datasets')
 
 pima_csv <- read.csv('Pima.csv', header=TRUE)
 pima_csv
@@ -177,10 +177,10 @@ hist(pima_csv$glucose, xlab='Glucose amount', main = 'Glucose histogram', col = 
   # use different colors for visualization: https://stackoverflow.com/questions/38810453/how-to-plot-a-histogram-with-different-colors-in-r
 
 getwd()
-setwd('/home/yash/public_health')
+setwd('/home/yash/r-datasets')
 
 world_data_2015 <- read.csv('2015.csv')
-happiness_data <- read.csv('world-happiness-report-2019.csv')
+#happiness_data <- read.csv('world-happiness-report-2019.csv')
 
 # cut() function - divides range of x into intervals and sorts values depending on which interval they fall into
   # leftmost interval = 1, ...
@@ -203,25 +203,54 @@ plot(gdp, happiness_score, pch=16, col=happiness_score_color, xlab='GDP', ylab='
 
 # chapter 9 - base graphing functions in R
 getwd()
-setwd('~/pokemon_analysis')
+setwd('~/r-datasets')
 
 pokemon_csv <- read.csv('pokemon.csv')
 
-pkmn_atk <- pokemon_csv$Attack
-pkmn_spd <- pokemon_csv$Speed
-pkmn_sp_atk <- pokemon_csv$Sp..Atk
+# different pokemon.csv, change values
+pkmn_atk <- pokemon_csv$attack
+pkmn_spd <- pokemon_csv$speed
+pkmn_sp_atk <- pokemon_csv$sp_attack
+
+#pkmn_spd
 
 # 4 arbitrary intervals - slow, average, faster, 'highest tier' -> add factors for color
 # create a range of hexadecimal colors and then use cut() to assign them to each data point (Pokemon)
 palette_by_speed <- colorRampPalette(c('magenta', 'cyan')) 
 
 # assign each Pokemon based on speed to an interval
-intervals_by_speed <- palette_by_speed(4)[as.numeric(cut(pkmn_spd, breaks=4))] # 
+intervals_by_speed <- palette_by_speed(4)[as.numeric(cut(pkmn_spd, breaks=4))] # cut must be numeric
 
 # use colorRampPalette to return a vector of colors that is used in plot()
   #https://bookdown.org/rdpeng/exdata/plotting-and-color-in-r.html
-return_hexadecimals <- colorRampPalette(c('red', 'blue'))
-color_ramp_palette_col <- c(return_hexadecimals(4))
+return_hexadecimals_rb <- colorRampPalette(c('red', 'blue'))
+color_ramp_palette_col_rb <- c(return_hexadecimals(4))
 
-plot(pkmn_atk, pkmn_sp_atk, col=color_ramp_palette_col, cex.main=1, xlab='Attack', ylab='Sp. Attack', main = 'Offensive potential in Pokemon', font.main=1, pch=16)
-legend('topleft', legend=c(x='slow', 'average', 'fast', 'highest tier'), col=color_ramp_palette_col, cex=0.75, pch=16) # have to specify pch argument, otherwise dots will not show up
+plot(pkmn_atk, pkmn_sp_atk, col=color_ramp_palette_col_rb, cex.main=1, xlab='Attack', ylab='Sp. Attack', main = 'Offensive potential in Pokemon', font.main=1, pch=16)
+legend('topleft', legend=c(x='slow', 'average', 'fast', 'highest tier'), col=color_ramp_palette_col_rb, cex=0.75, pch=16, bg='lightblue') # have to specify pch argument, otherwise dots will not show up
+
+# use new Pokemon.csv file for histogram analysis
+exp_growth <- pokemon_csv$experience_growth
+base_total_stats <- pokemon_csv$base_total
+
+exp_growth
+base_total_stats
+
+return_hexadecimals_bg <- colorRampPalette(c('skyblue', 'limegreen'))
+color_ramp_palette_col_bg <- c(return_hexadecimals_bg(5))
+
+hist(exp_growth, base_total_stats, col=color_ramp_palette_col_bg, cex.main=1, xlab='EXP growth', ylab='Base stats', main='EXP growth vs. Base stats', pch=16, breaks=5, ylim=c(0,600))
+legend('topleft', legend=c(x='fluctuating', 'slow', 'medium slow', 'medium fast', 'fast'), col=color_ramp_palette_col_bg, cex=0.7, pch=16, bg='salmon')
+
+# use new Pokemon.csv file for histogram analysis
+exp_growth <- pokemon_csv$experience_growth
+base_total_stats <- pokemon_csv$base_total
+
+exp_growth
+base_total_stats
+
+return_hexadecimals_bg <- colorRampPalette(c('skyblue', 'limegreen'))
+color_ramp_palette_col_bg <- c(return_hexadecimals_bg(5))
+
+hist(exp_growth, base_total_stats, col=color_ramp_palette_col_bg, cex.main=1, xlab='EXP growth', ylab='Base stats', main='EXP growth vs. Base stats', pch=16, breaks=5, ylim=c(0,600))
+legend('topleft', legend=c(x='fluctuating', 'slow', 'medium slow', 'medium fast', 'fast'), col=color_ramp_palette_col_bg, cex=0.7, pch=16, bg='salmon')

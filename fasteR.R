@@ -225,3 +225,45 @@ color_ramp_palette_col <- c(return_hexadecimals(4))
 
 plot(pkmn_atk, pkmn_sp_atk, col=color_ramp_palette_col, cex.main=1, xlab='Attack', ylab='Sp. Attack', main = 'Offensive potential in Pokemon', font.main=1, pch=16)
 legend('topleft', legend=c(x='slow', 'average', 'fast', 'highest tier'), col=color_ramp_palette_col, cex=0.75, pch=16) # have to specify pch argument, otherwise dots will not show up
+
+# Ch. 17 - linear regression analysis
+
+# brief MLB linear regression with R
+age_mlb <- mlb$Age
+height_mlb <- mlb$Height
+weight_mlb <- mlb$Weight
+
+# use tapply to examine all variables per player
+mlb_tapply_representation <- tapply(weight_mlb, age_mlb, mean)
+mlb_tapply_representation
+
+# create a linear model for the regression body
+mlb_lin_model <- lm(weight_mlb ~ age_mlb, mlb)
+mlb_lin_resid <- resid(mlb_lin_model)
+
+summary(mlb_lin_model)
+
+# create a color palette to further contextualize age ranges
+return_hexadecimals_mlb <- colorRampPalette(c('red', 'blue'))
+color_ramp_palette_col_mlb <- c(return_hexadecimals_mlb(4))
+  
+# https://stats.idre.ucla.edu/r/faq/how-can-i-do-a-scatterplot-with-regression-line-or-any-other-lines/
+with(mlb, plot(x = age_mlb,
+               y = weight_mlb,
+               xlab = 'Age',
+               ylab = 'Weight',
+               main = 'Age vs. Weight',
+               pch = 16,
+               col = color_ramp_palette_col_mlb))
+
+legend('topright', legend=c(x='18-22', '23-30', '31-40', '41-50'), col=color_ramp_palette_col_mlb, cex=0.75, pch=16)
+
+abline(mlb_lin_model)
+
+# plot residuals
+plot(age_mlb, mlb_lin_resid, data = mlb,
+     ylab = 'Residuals', xlab = 'Age',
+     main = 'Age vs. Residuals (weight)', pch=16, col = color_ramp_palette_col_mlb)
+legend('topright', legend=c(x='18-22', '23-30', '31-40', '41-50'), col=color_ramp_palette_col_mlb, cex=0.75, pch=16)
+abline(0, 0) # horizontal line y=0 to plot and contextualize residuals
+

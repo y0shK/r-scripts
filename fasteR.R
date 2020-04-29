@@ -296,3 +296,26 @@ plot(age_mlb, mlb_lin_resid, data = mlb,
      main = 'Age vs. Residuals (weight)', pch=16, col = color_ramp_palette_col_mlb)
 legend('topright', legend=c(x='18-22', '23-30', '31-40', '41-50'), col=color_ramp_palette_col_mlb, cex=0.75, pch=16)
 abline(0, 0) # horizontal line y=0 to plot and contextualize residuals
+
+# additional R regression topics
+mlb_rownums <- split(1:nrow(mlb), mlb$PosCategory) # split data by row numbers of each position
+str(mlb_rownums) # str() displays the structure of a called R object
+
+# split() produces a list blocked by position
+  # then iterate through list to call lm, blocked by position
+position_names <- c('Catcher', 'Infielder', 'Outfielder', 'Pitcher')
+mlb_position_df <- data.frame() # instantiate an empty data frame to block by position
+
+attach(mlb) # attaching mlb data directly lets values vary; values are static if called as df$subset
+for (pos in position_names) {
+  pos_rows <- mlb_rownums[[pos]]
+  lm_age <- lm(Weight ~ Age, data = mlb[pos_rows, ]) # only rows with specific positions, all columns
+  newrow <- lm_age$coefficients
+  mlb_position_df <- rbind(mlb_position_df, newrow)
+}
+
+mlb_position_df
+
+row.names(mlb_position_df) <- position_names # rows
+names(mlb_position_df) <- c('coefficient', 'slope') # columns
+

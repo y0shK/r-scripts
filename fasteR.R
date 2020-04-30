@@ -314,8 +314,64 @@ for (pos in position_names) {
   mlb_position_df <- rbind(mlb_position_df, newrow)
 }
 
-mlb_position_df
-
 row.names(mlb_position_df) <- position_names # rows
 names(mlb_position_df) <- c('coefficient', 'slope') # columns
+mlb_position_df
 
+# Pokemon analysis
+# arbitrary question - does attack vary by generation?
+
+# find a certain piece of data (generation number) within all rows and block by that data
+pokemon_rownums <- split(1:nrow(pokemon_csv), pokemon_csv$Generation)
+str(pokemon_rownums) # like head(), but whole - very compact
+
+generations <- c(1:6)
+
+pkmn_stats_df <- data.frame() # empty df instantiation, which can slowly be appended to (like Java or Python)
+
+# rownames chooses a variable to make independent and 'block' as in a statistical experiment
+# variables that are iterated through essentially act as dependent variables ('factors')
+
+attach(pokemon_csv)
+
+for (gen in generations) {
+  # go through each generation and append the specific sets of row numbers (e.g. gen 1 = 1 - x, gen 2 = x+1 - y, etc.)
+  stat_rows <- pokemon_rownums[[gen]] # use [[]] to access the vector data, rather than the list containing the vector with []
+  
+  # create lm by generation, input = df[[vector of each stat for all Pokemon]] -> output = linear regression for each stat
+  # stat_rows needs the unlist() method because data needs to be in vector form, i.e. stat_rows is type list -> transformed to vector for linReg
+  lm_by_generation <- lm(Total ~ Attack, data = pokemon_csv[unlist(stat_rows), ], na.action = na.exclude) # use just two variables; multivariate later
+  
+  # find coefficients and use rbind to apply them row-wise to the data frame
+  newrow_pokemon <- lm_by_generation$coefficients
+  pkmn_stats_df <- rbind(pkmn_stats_df, newrow_pokemon)
+}
+print(stat_rows)
+
+row.names(pkmn_stats_df) = c('Kanto', 'Johto', 'Hoenn', 'Sinnoh', 'Unova', 'Kalos')
+names(pkmn_stats_df) <- c('coefficients', 'slope')
+pkmn_stats_df
+
+# multivariate linear regression in R
+# good resource: https://data.library.virginia.edu/getting-started-with-multivariate-multiple-regression/
+
+# function to check the reliability of the multivariate regression
+statistical_checks <- function(x) {
+  head(resid(x)) # residuals
+  coef(x) # coefficients
+  sigma(x) # residual standard error
+  vcov(x) # variance-covariance matrix
+}
+
+# one dependent variable - total stats depending on all other stats
+# lm() is a flexible enough function that it can create a multivariate as well as a single-variable regression
+
+multivariate_pokemon_regression <- lm(Total ~ Attack + Defense + Sp..Atk + Sp..Def + Speed, data = pokemon_csv)
+summary(multivariate_pokemon_regression)
+statistical_checks(multivariate_pokemon_regression)
+
+# two dependent variables - can we predict a Pokemon's attacking stats given its defensive stats and speed?
+
+multivariate_two_variables <- lm(Attack + Sp..Atk ~ HP + Defense + Sp..Def + Speed, data = pokemon_csv)
+summary(multivariate_two_variables)
+statistical_checks(multivariate_two_variables)

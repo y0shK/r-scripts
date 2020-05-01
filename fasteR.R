@@ -375,3 +375,47 @@ statistical_checks(multivariate_pokemon_regression)
 multivariate_two_variables <- lm(Attack + Sp..Atk ~ HP + Defense + Sp..Def + Speed, data = pokemon_csv)
 summary(multivariate_two_variables)
 statistical_checks(multivariate_two_variables)
+
+# Ch 22 - various apply functions
+
+lapply(Attack, mean) # lapply uses a specific one-input function on a vector or list
+
+# loop-based R programming
+zlm <- function(PosCategory) lm(Weight ~ Age, data=mlb[PosCategory, ])$coefficients # using lm in a function and calling that function for PosCategory
+w <- lapply(mlb_rownums, zlm) # use lapply to apply that linear model across the pre-prepared row numbers of data
+w # linear regression blocked by PosCategory
+
+# same example with Pokemon - blocked by generation
+zlm_pokemon_attack <- function(Generation) lm(Total ~ Attack, data=pokemon_csv[Generation, ])$coefficients
+w_pokemon_attack <- lapply(pokemon_rownums, zlm_pokemon_attack)
+w_pokemon_attack
+
+zlm_pokemon_defense <- function(Generation) lm(Total ~ Defense, data=pokemon_csv[Generation, ])$coefficients
+w_pokemon_defense <- lapply(pokemon_rownums, zlm_pokemon_defense)
+w_pokemon_defense
+
+zlm_atk <- c()
+zlm_def <- c()
+
+for (i in 1:6) {
+  zlm_atk[i] <- Attack[i]
+  zlm_def[i] <- Defense[i]
+}
+
+zlm_atk
+zlm_def
+
+# use cbind to append vectors into a matrix
+# https://stackoverflow.com/questions/49125285/how-to-append-a-vector-as-a-column-in-r-matrix
+zlm_matrix <- matrix(1:2, nrow=6)
+zlm_matrix <- cbind(zlm_atk, zlm_matrix)
+zlm_matrix <- cbind(zlm_def, zlm_matrix)
+
+zlm_matrix <- zlm_matrix[, -3] # remove third column of 1 2 1 2 1 2
+
+rownames(zlm_matrix) <- c('Gen 1', 'Gen 2', 'Gen 3', 'Gen 4', 'Gen 5', 'Gen 6')
+colnames(zlm_matrix) <- c('Defense', 'Attack')
+zlm_matrix
+
+apply(zlm_matrix, 2, mean) # find the mean of each column - mean attack and defense
+

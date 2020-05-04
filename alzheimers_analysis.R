@@ -24,14 +24,34 @@ age_etiv_resid <- resid(age_etiv_lin_model)
 
 summary(age_etiv_lin_model)
 
+# exponential model
+exp_model_alzheimers <- lm(etiv ~ log(age), longitudinal)
+summary(exp_model_alzheimers)
+
+# plot linear model
 plot(age, etiv, col=color_ramp_palette_col_diagnosis, xlab='Age', ylab='Cranial volume', main='Age vs. cranial volume', pch=16)
 legend('topright', legend=c('Converted', 'Demented', 'Nondemented'), col=color_ramp_palette_col_diagnosis, pch=16)
-abline(age_etiv_lin_model) # line of best fit
-print(coef(age_etiv_lin_model))
+abline(age_etiv_lin_model) # plot trend line
+print(coef(age_etiv_lin_model)) # coefficients
 
+# plot linear model residuals
 plot(age_etiv_resid, col=color_ramp_palette_col_diagnosis, xlab='Age', ylab='Residuals', main='Age vs. cranial volume residuals', pch=16)
 legend('topright', legend=c('Converted', 'Demented', 'Nondemented'), col=color_ramp_palette_col_diagnosis, pch=16)
-abline(0, 0) # residual line, acts as x-axis
+abline(0, 0)
+
+# plot exponential model - residuals vs. fitted, normal prob plot, scale loc, resid vs. leverage
+plot(exp_model_alzheimers, col=color_ramp_palette_col_diagnosis, main='log(age) vs. cranial volume', pch=16)
+legend('topright', legend=c('Converted', 'Demented', 'Nondemented'), col=color_ramp_palette_col_diagnosis, pch=16)
+
+# create function to use for each variable histogram
+hist_for_variable <- function(x, xStr) {
+  hist(x, col=color_ramp_palette_col_diagnosis, main=xStr)
+  legend('topright', legend=c('Converted', 'Demented', 'Nondemented'), col=color_ramp_palette_col_diagnosis, pch=16)
+}
+
+hist_for_variable(age, 'Age histogram')
+hist_for_variable(etiv, 'Cranial volume histogram')
+hist_for_variable(mse, 'Mental state histogram')
 
 # sapply to find means
 sapply(age, mean)
